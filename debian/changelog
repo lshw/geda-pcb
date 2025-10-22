@@ -1,3 +1,9 @@
+pcb (1:4.3.0.20250610-1) UNRELEASED; urgency=medium
+
+  * Non-maintainer upload.
+
+ -- liu shiwei <liushiwei@gmail.com>  Wed, 22 Oct 2025 18:40:18 +0800
+
 pcb (1:4.2.2-1) unstable; urgency=medium
 
   * New upstream version 4.2.2

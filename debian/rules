@@ -11,6 +11,7 @@ ifeq (i386,$(findstring i386,$(DEB_HOST_ARCH)))
 endif
 
 CONFIGURE_OPTS=--disable-rpath --enable-dbus --disable-update-desktop-database --disable-update-mime-database --enable-dependency-tracking --enable-coord64 LDFLAGS="$(LDFLAGS) -Wl,--as-needed"
+CONFIGURE_OPTS+= --disable-gl
 
 %:
 	dh $@
