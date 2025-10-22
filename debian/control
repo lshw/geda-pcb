@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Debian Electronics Team <pkg-electronics-devel@lists.alioth.debian.org>
 Uploaders: Bdale Garbee <bdale@gag.com>,
             أحمد المحمودي (Ahmed El-Mahmoudy) <aelmahmoudy@users.sourceforge.net>
-Build-Depends: debhelper-compat (= 12), bison, flex, tk, libgd-dev, libdbus-1-dev, libmotif-dev, libxmu-dev, libxml-parser-perl, intltool, imagemagick, gerbv, ghostscript
+Build-Depends: debhelper-compat (= 12), bison, flex, tk, libgtk2.0-dev, texlive-base, texlive-plain-generic, texinfo, libgd-dev, libdbus-1-dev, libmotif-dev, libxmu-dev, libxml-parser-perl, intltool, imagemagick, gerbv, ghostscript
 Standards-Version: 4.4.1
 Rules-Requires-Root: no
 Homepage: http://pcb.geda-project.org/
