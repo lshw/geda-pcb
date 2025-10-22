@@ -1,0 +1,95 @@
+#!/usr/bin/make -f
+#                                          -*- makefile -*-
+# debian/rules file for the Debian/GNU Linux pcb package
+# Copyright 1997-99 by Hartmut Koptein <koptein@debian.org>
+
+package = pcb
+DEB_HOST_ARCH ?= $(shell dpkg-architecture -qDEB_HOST_ARCH)
+
+ifeq (i386,$(findstring i386,$(DEB_HOST_ARCH)))
+  export DEB_CFLAGS_MAINT_APPEND=-ffloat-store
+endif
+
+CONFIGURE_OPTS=--disable-rpath --enable-dbus --disable-update-desktop-database --disable-update-mime-database --enable-dependency-tracking --enable-coord64 LDFLAGS="$(LDFLAGS) -Wl,--as-needed"
+
+%:
+	dh $@
+
+# Disable autoreconf as it fails the build:
+override_dh_autoreconf:
+
+# I configure build-gtk unconditionally (arch-dependent and arch-independent)
+# because I need a single configure invocation in both cases
+override_dh_auto_configure:
+	DH_COMPAT=10 dh_auto_configure    --builddirectory build_gtk -- $(CONFIGURE_OPTS) --with-gui=gtk
+	DH_COMPAT=10 dh_auto_configure -a --builddirectory build_lesstif -- $(CONFIGURE_OPTS) --with-gui=lesstif
+
+override_dh_auto_build:
+	dh_auto_build -a --builddirectory build_gtk
+	dh_auto_build -a --builddirectory build_lesstif
+
+override_dh_auto_test:
+ifneq (${DEB_BUILD_ARCH},i386)
+	dh_auto_test -a --builddirectory build_gtk
+	dh_auto_test -a --builddirectory build_lesstif
+endif
+
+override_dh_auto_install-arch:
+	make -C build_gtk install-exec DESTDIR=$$PWD/debian/tmp AM_UPDATE_INFO_DIR=no
+
+override_dh_auto_install-indep:
+	make -C build_gtk install-data DESTDIR=$$PWD/debian/tmp AM_UPDATE_INFO_DIR=no
+
+override_dh_auto_clean:
+	dh_auto_clean --builddirectory build_gtk
+	dh_auto_clean --builddirectory build_lesstif
+
+override_dh_install-arch:
+	# Remove needlessly installed static library and header file before
+	# installing common files:
+	rm -rf $(CURDIR)/debian/tmp/usr/lib
+	rm -rf $(CURDIR)/debian/tmp/usr/include
+	dh_install -Xusr/bin -Xusr/share/pcb- -Xusr/share/doc -Xexamples -Xtutorial -Xusr/share/info
+
+	# Install pcb-gtk binary:
+	install build_gtk/src/pcb debian/$(package)-gtk/usr/bin/pcb-gtk
+
+	# Install pcb-lesstif binary:
+	install build_lesstif/src/pcb debian/$(package)-lesstif/usr/bin/pcb-lesstif
+
+override_dh_install-indep:
+	# Remove needlessly installed static library and header file before
+	# installing common files:
+	rm -rf $(CURDIR)/debian/tmp/usr/lib
+	rm -rf $(CURDIR)/debian/tmp/usr/include
+	dh_install -Xusr/bin -Xusr/share/pcb- -Xusr/share/doc -Xexamples -Xtutorial -Xusr/share/info
+
+	# Set executable bit for pcb tools:
+	[ ! -d debian/$(package)-common ] || chmod a+x debian/$(package)-common/usr/share/pcb/tools/MergePCBPS
+	[ ! -d debian/$(package)-common ] || chmod a+x debian/$(package)-common/usr/share/pcb/tools/Merge_dimPCBPS
+	[ ! -d debian/$(package)-common ] || chmod a+x debian/$(package)-common/usr/share/pcb/tools/tgo2pcb.tcl
+	[ ! -d debian/$(package)-common ] || chmod a+x debian/$(package)-common/usr/share/pcb/tools/PCB2HPGL
+	[ ! -d debian/$(package)-common ] || chmod a+x debian/$(package)-common/usr/share/pcb/tools/pcbdiff
+
+	# Remove empty dirs:
+	[ ! -d debian/$(package)-common ] || find debian/$(package)-common -type d -empty -delete
+
+override_dh_fixperms-indep:
+	dh_fixperms
+	# Fix permissions of a couple of example files:
+	[ ! -d debian/$(package)-common ] || chmod -x debian/$(package)-common/usr/share/doc/$(package)-common/examples/LED.pcb
+	[ ! -d debian/$(package)-common ] || chmod -x debian/$(package)-common/usr/share/doc/$(package)-common/examples/LED.net
+
+override_dh_installexamples:
+	dh_installexamples -XMakefile
+
+override_dh_installchangelogs:
+	dh_installchangelogs -p$(package)-common
+
+override_dh_installdocs:
+	# Only install docs in $(package)-common:
+	dh_installdocs -p$(package)-common
+
+override_dh_compress:
+	# exclude example files from compression
+	dh_compress -X.pcb -XLED

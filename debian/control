@@ -1,0 +1,64 @@
+Source: pcb
+Section: electronics
+Priority: optional
+Maintainer: Debian Electronics Team <pkg-electronics-devel@lists.alioth.debian.org>
+Uploaders: Bdale Garbee <bdale@gag.com>,
+            أحمد المحمودي (Ahmed El-Mahmoudy) <aelmahmoudy@users.sourceforge.net>
+Build-Depends: debhelper-compat (= 12), bison, flex, libgtkglext1-dev, tk, libgd-dev, libdbus-1-dev, libmotif-dev, libxmu-dev, libxml-parser-perl, intltool, imagemagick, gerbv, ghostscript
+Standards-Version: 4.4.1
+Rules-Requires-Root: no
+Homepage: http://pcb.geda-project.org/
+Vcs-Git: https://salsa.debian.org/electronics-team/pcb.git
+Vcs-Browser: https://salsa.debian.org/electronics-team/pcb
+
+Package: pcb
+Architecture: all
+Depends: ${misc:Depends}, pcb-gtk | pcb-lesstif, pcb-common
+Description: printed circuit board (pcb) design program - metapackage
+ PCB is an interactive printed circuit board editor for the X11 window
+ system. PCB includes a rats nest feature, design rule checking, and can
+ provide industry standard RS-274-X (Gerber), NC drill, and centroid data
+ (X-Y data) output for use in the board fabrication and assembly process.
+ PCB offers high end features such as an autorouter and trace optimizer
+ which can tremendously reduce layout time.
+
+Package: pcb-common
+Architecture: all
+Replaces: pcb
+Depends: ${misc:Depends}, m4, tk | wish, tcl | tclsh, pcb-gtk | pcb-lesstif
+Recommends: extra-xdg-menus
+Description: printed circuit board (pcb) design program - common files
+ PCB is an interactive printed circuit board editor for the X11 window
+ system. PCB includes a rats nest feature, design rule checking, and can
+ provide industry standard RS-274-X (Gerber), NC drill, and centroid data
+ (X-Y data) output for use in the board fabrication and assembly process.
+ PCB offers high end features such as an autorouter and trace optimizer
+ which can tremendously reduce layout time.
+ .
+ This package contains the common files.
+
+Package: pcb-gtk
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}, pcb-common
+Description: printed circuit board (pcb) design program - GTK+ interface
+ PCB is an interactive printed circuit board editor for the X11 window
+ system. PCB includes a rats nest feature, design rule checking, and can
+ provide industry standard RS-274-X (Gerber), NC drill, and centroid data
+ (X-Y data) output for use in the board fabrication and assembly process.
+ PCB offers high end features such as an autorouter and trace optimizer
+ which can tremendously reduce layout time.
+ .
+ This package contains the GTK+ user-interface for pcb.
+
+Package: pcb-lesstif
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}, pcb-common
+Description: printed circuit board (pcb) design program - LessTif interface
+ PCB is an interactive printed circuit board editor for the X11 window
+ system. PCB includes a rats nest feature, design rule checking, and can
+ provide industry standard RS-274-X (Gerber), NC drill, and centroid data
+ (X-Y data) output for use in the board fabrication and assembly process.
+ PCB offers high end features such as an autorouter and trace optimizer
+ which can tremendously reduce layout time.
+ .
+ This package contains the LessTif user-interface for pcb.
