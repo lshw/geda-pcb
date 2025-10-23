@@ -14,10 +14,10 @@ CONFIGURE_OPTS=--disable-rpath --enable-dbus --disable-update-desktop-database -
 CONFIGURE_OPTS+= --disable-gl
 
 %:
-	dh $@
+	dh $@ --with autoreconf
 
 # Disable autoreconf as it fails the build:
-override_dh_autoreconf:
+#override_dh_autoreconf:
 
 # I configure build-gtk unconditionally (arch-dependent and arch-independent)
 # because I need a single configure invocation in both cases
