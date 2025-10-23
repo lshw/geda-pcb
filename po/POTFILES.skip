@@ -6,3 +6,5 @@ sub/src/gpcb-menu.res.h
 sub/src/pcb-menu.res.h
 build/
 build-dbg/
+build_lesstif/
+build_gtk/
